@@ -234,7 +234,7 @@ static void hv_set_host_time(struct work_struct *work)
 {
 	struct timespec64 ts = hv_get_adj_host_time();
 
-	do_settimeofday64(&ts);
+	do_settimeofday(&host_ts);
 }
 
 /*
@@ -250,35 +250,24 @@ static void hv_set_host_time(struct work_struct *work)
  * typically used as a hint to the guest. The guest is under no obligation
  * to discipline the clock.
  */
-static inline void adj_guesttime(u64 hosttime, u64 reftime, u8 adj_flags)
+static struct adj_time_work  wrk;
+static inline void adj_guesttime(u64 hosttime, u64 reftime, u8 flags)
 {
-	unsigned long flags;
-	u64 cur_reftime;
 
 	/*
-	 * Save the adjusted time sample from the host and the snapshot
-	 * of the current system time.
+	 * This check is safe since we are executing in the
+	 * interrupt context and time synch messages arre always
+	 * delivered on the same CPU.
 	 */
-	spin_lock_irqsave(&host_ts.lock, flags);
+	if (work_pending(&wrk.work))
+		return;
 
-	cur_reftime = hyperv_cs->read(hyperv_cs);
-	host_ts.host_time = hosttime;
-	host_ts.ref_time = cur_reftime;
-
-	/*
-	 * TimeSync v4 messages contain reference time (guest's Hyper-V
-	 * clocksource read when the time sample was generated), we can
-	 * improve the precision by adding the delta between now and the
-	 * time of generation. For older protocols we set
-	 * reftime == cur_reftime on call.
-	 */
-	host_ts.host_time += (cur_reftime - reftime);
-
-	spin_unlock_irqrestore(&host_ts.lock, flags);
-
-	/* Schedule work to do do_settimeofday64() */
-	if (adj_flags & ICTIMESYNCFLAG_SYNC)
-		schedule_work(&adj_time_work);
+	wrk.host_time = hosttime;
+	wrk.ref_time = reftime;
+	wrk.flags = flags;
+	if ((flags & (ICTIMESYNCFLAG_SYNC | ICTIMESYNCFLAG_SAMPLE)) != 0) {
+		schedule_work(&wrk.work);
+	}
 }
 
 /*
@@ -489,75 +478,15 @@ static  struct hv_driver util_drv = {
 	.remove =  util_remove,
 };
 
-static int hv_ptp_enable(struct ptp_clock_info *info,
-			 struct ptp_clock_request *request, int on)
-{
-	return -EOPNOTSUPP;
-}
-
-static int hv_ptp_settime(struct ptp_clock_info *p, const struct timespec64 *ts)
-{
-	return -EOPNOTSUPP;
-}
-
-static int hv_ptp_adjfreq(struct ptp_clock_info *ptp, s32 delta)
-{
-	return -EOPNOTSUPP;
-}
-static int hv_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
-{
-	return -EOPNOTSUPP;
-}
-
-static int hv_ptp_gettime(struct ptp_clock_info *info, struct timespec64 *ts)
-{
-	*ts = hv_get_adj_host_time();
-
-	return 0;
-}
-
-static struct ptp_clock_info ptp_hyperv_info = {
-	.name		= "hyperv",
-	.enable         = hv_ptp_enable,
-	.adjtime        = hv_ptp_adjtime,
-	.adjfreq        = hv_ptp_adjfreq,
-	.gettime64      = hv_ptp_gettime,
-	.settime64      = hv_ptp_settime,
-	.owner		= THIS_MODULE,
-};
-
-static struct ptp_clock *hv_ptp_clock;
-
 static int hv_timesync_init(struct hv_util_service *srv)
 {
-	/* TimeSync requires Hyper-V clocksource. */
-	if (!hyperv_cs)
-		return -ENODEV;
-
-	spin_lock_init(&host_ts.lock);
-
-	INIT_WORK(&adj_time_work, hv_set_host_time);
-
-	/*
-	 * ptp_clock_register() returns NULL when CONFIG_PTP_1588_CLOCK is
-	 * disabled but the driver is still useful without the PTP device
-	 * as it still handles the ICTIMESYNCFLAG_SYNC case.
-	 */
-	hv_ptp_clock = ptp_clock_register(&ptp_hyperv_info, NULL);
-	if (IS_ERR_OR_NULL(hv_ptp_clock)) {
-		pr_err("cannot register PTP clock: %d\n",
-		       PTR_ERR_OR_ZERO(hv_ptp_clock));
-		hv_ptp_clock = NULL;
-	}
-
+	INIT_WORK(&wrk.work, hv_set_host_time);
 	return 0;
 }
 
 static void hv_timesync_deinit(void)
 {
-	if (hv_ptp_clock)
-		ptp_clock_unregister(hv_ptp_clock);
-	cancel_work_sync(&adj_time_work);
+	cancel_work_sync(&wrk.work);
 }
 
 static int __init init_hyperv_utils(void)

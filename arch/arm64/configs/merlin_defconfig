@@ -31,6 +31,51 @@ CONFIG_NR_CPUS=8
 CONFIG_PREEMPT=y
 # CONFIG_BOUNCE is not set
 CONFIG_ZSMALLOC=y
+CONFIG_PGTABLE_MAPPING=y
+# CONFIG_ZSMALLOC_STAT is not set
+CONFIG_GENERIC_EARLY_IOREMAP=y
+# CONFIG_IDLE_PAGE_TRACKING is not set
+CONFIG_ARCH_HAS_PTE_SPECIAL=y
+CONFIG_ARCH_SUPPORTS_SPECULATIVE_PAGE_FAULT=y
+CONFIG_SPECULATIVE_PAGE_FAULT=y
+CONFIG_PROCESS_RECLAIM=y
+CONFIG_FRAME_VECTOR=y
+# CONFIG_PERCPU_STATS is not set
+CONFIG_HAVE_LOW_MEMORY_KILLER=y
+CONFIG_SECCOMP=y
+# CONFIG_PARAVIRT is not set
+# CONFIG_PARAVIRT_TIME_ACCOUNTING is not set
+# CONFIG_KEXEC is not set
+# CONFIG_CRASH_DUMP is not set
+# CONFIG_XEN is not set
+CONFIG_FORCE_MAX_ZONEORDER=11
+CONFIG_UNMAP_KERNEL_AT_EL0=y
+CONFIG_HARDEN_BRANCH_PREDICTOR=y
+CONFIG_ARM64_SSBD=y
+CONFIG_ARM64_TAGGED_ADDR_ABI=y
+CONFIG_ARMV8_DEPRECATED=y
+CONFIG_SWP_EMULATION=y
+CONFIG_CP15_BARRIER_EMULATION=y
+CONFIG_SETEND_EMULATION=y
+CONFIG_ARM64_SW_TTBR0_PAN=y
+
+#
+# ARMv8.1 architectural features
+#
+CONFIG_ARM64_HW_AFDBM=y
+CONFIG_ARM64_PAN=y
+# CONFIG_ARM64_LSE_ATOMICS is not set
+# CONFIG_ARM64_VHE is not set
+
+#
+# ARMv8.2 architectural features
+#
+CONFIG_ARM64_UAO=y
+# CONFIG_ARM64_PMEM is not set
+CONFIG_ARM64_MODULE_CMODEL_LARGE=y
+CONFIG_ARM64_MODULE_PLTS=y
+CONFIG_RELOCATABLE=y
+>>>>>>> 632af6f9003a... [BACKPORT] treewide: Backport CAF msm-4.14 low memory killer changes
 CONFIG_RANDOMIZE_BASE=y
 CONFIG_CMDLINE="console=tty0 console=ttyMT3,921600n1 root=/dev/ram vmalloc=496M slub_max_order=0 slub_debug=0 "
 # CONFIG_EFI is not set
@@ -379,7 +424,138 @@ CONFIG_LEDS_TRIGGER_TIMER=y
 CONFIG_RTC_DRV_MT6358=y
 CONFIG_DMADEVICES=y
 CONFIG_DMA_MTK_UART=y
-CONFIG_ANDROID_INTF_ALARM_DEV=y
+# CONFIG_FSL_EDMA is not set
+# CONFIG_INTEL_IDMA64 is not set
+# CONFIG_MV_XOR_V2 is not set
+# CONFIG_PL330_DMA is not set
+# CONFIG_XILINX_DMA is not set
+# CONFIG_XILINX_ZYNQMP_DMA is not set
+# CONFIG_QCOM_HIDMA_MGMT is not set
+# CONFIG_QCOM_HIDMA is not set
+# CONFIG_DW_DMAC is not set
+
+#
+# DMA Clients
+#
+# CONFIG_ASYNC_TX_DMA is not set
+# CONFIG_DMATEST is not set
+
+#
+# DMABUF options
+#
+CONFIG_SYNC_FILE=y
+# CONFIG_AUXDISPLAY is not set
+# CONFIG_UIO is not set
+# CONFIG_VFIO is not set
+# CONFIG_VIRT_DRIVERS is not set
+
+#
+# Virtio drivers
+#
+# CONFIG_VIRTIO_MMIO is not set
+
+#
+# Microsoft Hyper-V guest support
+#
+# CONFIG_HYPERV_TSCPAGE is not set
+CONFIG_STAGING=y
+# CONFIG_IRDA is not set
+# CONFIG_PRISM2_USB is not set
+# CONFIG_COMEDI is not set
+# CONFIG_RTLLIB is not set
+# CONFIG_RTL8723BS is not set
+# CONFIG_R8712U is not set
+# CONFIG_R8188EU is not set
+
+#
+# IIO staging drivers
+#
+
+#
+# Accelerometers
+#
+# CONFIG_ADIS16201 is not set
+# CONFIG_ADIS16203 is not set
+# CONFIG_ADIS16209 is not set
+# CONFIG_ADIS16240 is not set
+
+#
+# Analog to digital converters
+#
+# CONFIG_AD7606 is not set
+# CONFIG_AD7780 is not set
+# CONFIG_AD7816 is not set
+# CONFIG_AD7192 is not set
+# CONFIG_AD7280 is not set
+
+#
+# Analog digital bi-direction converters
+#
+# CONFIG_ADT7316 is not set
+
+#
+# Capacitance to digital converters
+#
+# CONFIG_AD7150 is not set
+# CONFIG_AD7152 is not set
+# CONFIG_AD7746 is not set
+
+#
+# Direct Digital Synthesis
+#
+# CONFIG_AD9832 is not set
+# CONFIG_AD9834 is not set
+
+#
+# Digital gyroscope sensors
+#
+# CONFIG_ADIS16060 is not set
+
+#
+# Network Analyzer, Impedance Converters
+#
+# CONFIG_AD5933 is not set
+
+#
+# Light sensors
+#
+# CONFIG_TSL2x7x is not set
+
+#
+# Active energy metering IC
+#
+# CONFIG_ADE7753 is not set
+# CONFIG_ADE7754 is not set
+# CONFIG_ADE7758 is not set
+# CONFIG_ADE7759 is not set
+# CONFIG_ADE7854 is not set
+
+#
+# Resolver to digital converters
+#
+# CONFIG_AD2S90 is not set
+# CONFIG_AD2S1200 is not set
+# CONFIG_AD2S1210 is not set
+
+#
+# Triggers - standalone
+#
+
+#
+# Speakup console speech
+#
+# CONFIG_STAGING_MEDIA is not set
+
+#
+# Android
+#
+CONFIG_ASHMEM=y
+# CONFIG_MTK_GMO_RAM_OPTIMIZE is not set
+# CONFIG_MTK_ENABLE_GMO is not set
+# CONFIG_MTK_ENABLE_AGO is not set
+CONFIG_ANDROID_LOW_MEMORY_KILLER=y
+CONFIG_ANDROID_LOW_MEMORY_KILLER_AUTODETECT_OOM_ADJ_VALUES=y
+>>>>>>> 632af6f9003a... [BACKPORT] treewide: Backport CAF msm-4.14 low memory killer changes
 CONFIG_ION=y
 CONFIG_MTK_ION=y
 CONFIG_NANOHUB=y

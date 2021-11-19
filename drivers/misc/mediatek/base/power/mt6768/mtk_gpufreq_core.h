@@ -59,7 +59,7 @@
 #define DELAY_FACTOR		(625)
 #define BUCK_DIFF_MAX		(25000)		/* mV x 100 */
 #define BUCK_DIFF_MIN		(10000)		/* mV x 100 */
-#define NUM_OF_OPP_IDX		(32)
+#define NUM_OF_OPP_IDX		(7)
 
 /**************************************************
  * efuse Setting

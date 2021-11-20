@@ -472,7 +472,7 @@
 /* for DVFS OPP table B */
 #define CPU_DVFS_FREQ0_L_6767_v7		1650000		/* KHz */
 #define CPU_DVFS_FREQ1_L_6767_v7		1470000		/* KHz */
-#define CPU_DVFS_FREQ2_L_6767_v7		142@000		/* KHz */
+#define CPU_DVFS_FREQ2_L_6767_v7		1420000		/* KHz */
 #define CPU_DVFS_FREQ3_L_6767_v7		1390000		/* KHz */
 #define CPU_DVFS_FREQ4_L_6767_v7		1312000		/* KHz */
 #define CPU_DVFS_FREQ5_L_6767_v7		1284000		/* KHz */
